@@ -1,0 +1,29 @@
+# Claude — 사용자 로컬 설정 (PC별 차이)
+.claude/settings.local.json
+.claude/logs/
+.claude/.cache/
+.claude/projects/
+
+# Obsidian — 작업 상태/사용자별
+docs/.obsidian/workspace
+docs/.obsidian/workspace.json
+docs/.obsidian/workspace-mobile.json
+docs/.obsidian/cache
+docs/.obsidian/graph.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.idea/
+.vscode/
+
+# Secrets
+.env
+.env.*
+!.env.template
+!.env.example
+*.key
+*.pem

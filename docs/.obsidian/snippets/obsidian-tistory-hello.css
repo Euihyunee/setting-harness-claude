@@ -1,0 +1,390 @@
+/* =========================================================================
+ * Tistory hELLO 커스텀 스킨 → Obsidian 스니펫 이식본
+ * 라이트/다크 모두 포함. 적용 위치: <Vault>/.obsidian/snippets/ 에 이 파일 두고
+ * Obsidian 설정 → 모양 → CSS 스니펫에서 토글 ON.
+ *
+ * 매핑 메모:
+ *   - {: .green }   →  > [!success]
+ *   - {: .yellow }  →  > [!warning]
+ *   - {: .blue }    →  > [!info]   (note/tip 도 동일 톤)
+ *   - {: .red }     →  > [!danger]
+ *   - 코드블록 macOS 헤더는 ::before 박스섀도우 트릭(3 dots) + 언어 라벨(:has)
+ *     로 흉내. 원본 라인넘버는 옵시디언 단독으론 불가 → "Code Block
+ *     Customizer" 플러그인과 병행 권장.
+ * ========================================================================= */
+
+/* ── 1. 톤 변수 (hELLO h-시리즈) ─────────────────────────────────── */
+.theme-light {
+  --th-bg: #ffffff;
+  --th-h100: #fafafb;
+  --th-h200: #f4f4f6;
+  --th-h300: #e6e6e9;
+  --th-h400: #9999a1;
+  --th-h500: #66666e;
+  --th-h600: #1e1f21;
+  --th-h700: #292a2d;
+  --th-link: #d97706;        /* h-orange */
+  --th-code-bg: #f4f4f6;
+  --th-code-fg: #24292e;
+  --th-bq-bg: #e5e7eb;
+  --th-bq-bar: #111827;
+}
+.theme-dark {
+  --th-bg: #1e1f21;
+  --th-h100: #292a2d;
+  --th-h200: #333437;
+  --th-h300: #3a3b3e;
+  --th-h400: #66666e;
+  --th-h500: #9999a1;
+  --th-h600: #c8c8cc;
+  --th-h700: #f4f4f6;
+  --th-link: #58a6ff;        /* h-blue */
+  --th-code-bg: #0d1117;
+  --th-code-fg: #c9d1d9;
+  --th-bq-bg: #1f2937;
+  --th-bq-bar: #9ca3af;
+}
+
+/* ── 2. 본문 타이포 ──────────────────────────────────────────────── */
+.markdown-rendered,
+.markdown-source-view.mod-cm6 .cm-content {
+  line-height: 1.9;
+  color: var(--th-h600);
+}
+.theme-dark .markdown-rendered,
+.theme-dark .markdown-source-view.mod-cm6 .cm-content {
+  color: var(--th-h600);
+}
+
+/* ── 3. 헤딩 (h2 밑줄, 마진, 굵기) ───────────────────────────────── */
+.markdown-rendered h1,
+.markdown-rendered h2,
+.markdown-rendered h3,
+.markdown-rendered h4 {
+  margin: 1.25rem 0;
+  font-weight: 500;
+  color: var(--th-h600);
+  scroll-margin-top: 5rem;
+}
+.theme-dark .markdown-rendered :is(h1, h2, h3, h4) {
+  color: var(--th-h600);
+}
+.markdown-rendered h2 {
+  font-size: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #d4d4d8;
+}
+.theme-dark .markdown-rendered h2 {
+  border-bottom-color: var(--th-h300);
+}
+.markdown-rendered h3 { font-size: 1.25rem; }
+.markdown-rendered h4 { font-size: 1.125rem; }
+
+/* ── 4. 링크 ─────────────────────────────────────────────────────── */
+.markdown-rendered a,
+.markdown-rendered a.internal-link,
+.markdown-rendered a.external-link {
+  color: var(--th-link);
+  text-decoration: none;
+}
+.markdown-rendered a:hover { text-decoration: underline; }
+
+/* ── 5. 인라인 코드 ──────────────────────────────────────────────── */
+.markdown-rendered :not(pre) > code {
+  border-radius: 6px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.875em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--th-link);
+  background: var(--th-h200);
+  position: relative;
+  top: -1px;
+}
+.theme-dark .markdown-rendered :not(pre) > code {
+  color: #58a6ff;
+  background: var(--th-h100);
+}
+
+/* ── 6. 일반 blockquote (= hELLO default-blockquote) ────────────── */
+.markdown-rendered blockquote:not(.callout) {
+  background: var(--th-bq-bg) !important;
+  border-left: 4px solid var(--th-bq-bar) !important;
+  padding: 15px !important;
+  margin: 20px 0 !important;
+  border-radius: 0 8px 8px 0 !important;
+  color: var(--th-h600) !important;
+}
+.theme-dark .markdown-rendered blockquote:not(.callout) {
+  color: var(--th-h600) !important;
+}
+.markdown-rendered blockquote:not(.callout) p {
+  margin-bottom: 0 !important;
+}
+
+/* ── 7. 콜아웃 (옵시디언 native → hELLO 4색 박스) ─────────────────
+ *  success/check/done       → green
+ *  warning/caution/attention→ yellow
+ *  info/note/tip/abstract...→ blue
+ *  danger/error/fail/bug    → red
+ *  공통: 좌측 4px 컬러바 + 연한 배경 + 라운드. 타이틀 굵게.
+ * ──────────────────────────────────────────────────────────────── */
+.markdown-rendered .callout {
+  --callout-radius: 0 8px 8px 0;
+  border: none !important;
+  border-left: 4px solid var(--th-callout-bar, #6b7280) !important;
+  background: var(--th-callout-bg, var(--th-h200)) !important;
+  border-radius: 0 8px 8px 0 !important;
+  padding: 12px 15px !important;
+  margin: 20px 0 !important;
+  color: #333 !important;
+}
+.markdown-rendered .callout-title {
+  padding: 0 0 4px 0;
+  color: inherit;
+  font-weight: 700;
+}
+.markdown-rendered .callout-icon { color: inherit; }
+.markdown-rendered .callout-content > :last-child { margin-bottom: 0; }
+
+/* green */
+.markdown-rendered .callout[data-callout="success"],
+.markdown-rendered .callout[data-callout="check"],
+.markdown-rendered .callout[data-callout="done"] {
+  --th-callout-bg: #d4edda;
+  --th-callout-bar: #28a745;
+}
+/* yellow */
+.markdown-rendered .callout[data-callout="warning"],
+.markdown-rendered .callout[data-callout="caution"],
+.markdown-rendered .callout[data-callout="attention"] {
+  --th-callout-bg: #fff3cd;
+  --th-callout-bar: #ffc107;
+}
+/* blue */
+.markdown-rendered .callout[data-callout="info"],
+.markdown-rendered .callout[data-callout="note"],
+.markdown-rendered .callout[data-callout="tip"],
+.markdown-rendered .callout[data-callout="hint"],
+.markdown-rendered .callout[data-callout="abstract"],
+.markdown-rendered .callout[data-callout="summary"],
+.markdown-rendered .callout[data-callout="tldr"],
+.markdown-rendered .callout[data-callout="example"],
+.markdown-rendered .callout[data-callout="quote"],
+.markdown-rendered .callout[data-callout="cite"] {
+  --th-callout-bg: #cce5ff;
+  --th-callout-bar: #007bff;
+}
+/* red */
+.markdown-rendered .callout[data-callout="danger"],
+.markdown-rendered .callout[data-callout="error"],
+.markdown-rendered .callout[data-callout="fail"],
+.markdown-rendered .callout[data-callout="failure"],
+.markdown-rendered .callout[data-callout="missing"],
+.markdown-rendered .callout[data-callout="bug"] {
+  --th-callout-bg: #f8d7da;
+  --th-callout-bar: #dc3545;
+}
+
+/* 다크모드: hELLO는 컬러 박스를 그대로 두지만 살짝 톤다운 */
+.theme-dark .markdown-rendered .callout { color: #1a1a1a !important; }
+.theme-dark .markdown-rendered .callout a { color: #0b3d91; }
+
+/* 박스 내부 리스트 마커 복구 */
+.markdown-rendered .callout ul,
+.markdown-rendered blockquote:not(.callout) ul {
+  list-style: disc !important;
+  padding-left: 1.5em !important;
+}
+.markdown-rendered .callout ol,
+.markdown-rendered blockquote:not(.callout) ol {
+  list-style: decimal !important;
+  padding-left: 1.5em !important;
+}
+
+/* ── 8. 리스트 (1단계 disc / 2단계 ▪, 1단계 decimal / 2단계 a.b.c) ── */
+.markdown-rendered ul > li { list-style-type: disc; }
+.markdown-rendered ul ul > li { list-style-type: "▪ "; }
+.markdown-rendered ol > li { list-style-type: decimal; }
+.markdown-rendered ol ol > li { list-style-type: lower-alpha; }
+
+/* ── 9. 표 (헤더 강조 + 짝수행 zebra) ────────────────────────────── */
+.markdown-rendered table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+}
+.markdown-rendered th {
+  background: var(--th-h200);
+  color: var(--th-h600);
+  font-weight: 700;
+  border: 1px solid var(--th-h300);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.theme-dark .markdown-rendered th {
+  background: var(--th-h100);
+  color: #f4f4f6;
+  border-color: var(--th-h300);
+}
+.markdown-rendered td {
+  border: 1px solid var(--th-h300);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--th-h600);
+}
+.theme-dark .markdown-rendered td {
+  color: #f4f4f6;
+  border-color: var(--th-h300);
+}
+
+/* ── 10. 코드블록 macOS 터미널 헤더 (pseudo-element) ──────────────
+ *  pre::before  → 신호등 3개 (box-shadow 트릭)
+ *  pre::after   → 언어 라벨 (:has + 언어별 룰)
+ *  내장 .copy-code-button 을 우상단으로 재배치
+ * ──────────────────────────────────────────────────────────────── */
+.markdown-rendered pre {
+  position: relative;
+  border-radius: 8px;
+  padding: 2.4rem 1rem 1rem !important;
+  background: var(--th-code-bg) !important;
+  border: 1px solid var(--th-h300);
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+.markdown-rendered pre::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow:
+    18px 0 0 #ffbd2e,
+    36px 0 0 #27c93f;
+  z-index: 1;
+}
+.markdown-rendered pre::after {
+  content: "CODE";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--th-h500);
+  pointer-events: none;
+}
+.theme-dark .markdown-rendered pre::after { color: var(--th-h500); }
+
+/* 언어별 라벨 (Tistory hightlightCodeBlocks 와 동일한 표시 규칙) */
+.markdown-rendered pre:has(code.language-javascript)::after,
+.markdown-rendered pre:has(code.language-js)::after { content: "JAVASCRIPT"; }
+.markdown-rendered pre:has(code.language-typescript)::after,
+.markdown-rendered pre:has(code.language-ts)::after { content: "TYPESCRIPT"; }
+.markdown-rendered pre:has(code.language-python)::after,
+.markdown-rendered pre:has(code.language-py)::after { content: "PYTHON"; }
+.markdown-rendered pre:has(code.language-java)::after { content: "JAVA"; }
+.markdown-rendered pre:has(code.language-c)::after { content: "C"; }
+.markdown-rendered pre:has(code.language-cpp)::after { content: "CPP"; }
+.markdown-rendered pre:has(code.language-csharp)::after,
+.markdown-rendered pre:has(code.language-cs)::after { content: "CSHARP"; }
+.markdown-rendered pre:has(code.language-go)::after { content: "GO"; }
+.markdown-rendered pre:has(code.language-rust)::after,
+.markdown-rendered pre:has(code.language-rs)::after { content: "RUST"; }
+.markdown-rendered pre:has(code.language-ruby)::after,
+.markdown-rendered pre:has(code.language-rb)::after { content: "RUBY"; }
+.markdown-rendered pre:has(code.language-php)::after { content: "PHP"; }
+.markdown-rendered pre:has(code.language-html)::after { content: "HTML"; }
+.markdown-rendered pre:has(code.language-css)::after { content: "CSS"; }
+.markdown-rendered pre:has(code.language-scss)::after { content: "SCSS"; }
+.markdown-rendered pre:has(code.language-json)::after { content: "JSON"; }
+.markdown-rendered pre:has(code.language-yaml)::after,
+.markdown-rendered pre:has(code.language-yml)::after { content: "YAML"; }
+.markdown-rendered pre:has(code.language-markdown)::after,
+.markdown-rendered pre:has(code.language-md)::after { content: "MARKDOWN"; }
+.markdown-rendered pre:has(code.language-bash)::after,
+.markdown-rendered pre:has(code.language-sh)::after,
+.markdown-rendered pre:has(code.language-shell)::after { content: "BASH"; }
+.markdown-rendered pre:has(code.language-sql)::after { content: "SQL"; }
+.markdown-rendered pre:has(code.language-dockerfile)::after { content: "DOCKERFILE"; }
+
+.markdown-rendered pre > code {
+  display: block;
+  background: transparent !important;
+  padding: 0 !important;
+  font-family:
+    "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  color: var(--th-code-fg);
+  white-space: pre !important;
+  overflow-x: auto;
+}
+
+/* 옵시디언 내장 복사 버튼: macOS 헤더 우측에 어울리게 */
+.markdown-rendered pre > .copy-code-button {
+  position: absolute !important;
+  top: 8px;
+  right: 8px;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--th-h500);
+  border: none;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+}
+.markdown-rendered pre:hover > .copy-code-button { opacity: 1; }
+.markdown-rendered pre > .copy-code-button:hover {
+  background: var(--th-h300);
+  color: var(--th-h700);
+}
+.theme-dark .markdown-rendered pre > .copy-code-button:hover {
+  background: var(--th-h200);
+  color: #fff;
+}
+
+/* 다크모드 코드블록 보더 톤 */
+.theme-dark .markdown-rendered pre {
+  border-color: var(--th-h200);
+}
+
+/* ── 11. 수평선 ─────────────────────────────────────────────────── */
+.markdown-rendered hr {
+  border: 0;
+  border-top: 1px solid var(--th-h300);
+  margin: 2rem 0;
+}
+
+/* ── 12. 강조 ──────────────────────────────────────────────────── */
+.markdown-rendered strong, .markdown-rendered b { font-weight: 700; }
+.markdown-rendered em, .markdown-rendered i  { font-style: italic; }
+.markdown-rendered del, .markdown-rendered s { text-decoration: line-through; }
+
+/* ── 13. 라이브 프리뷰(에디터 모드) 코드 톤 정도만 맞춤 ──────────── */
+.markdown-source-view.mod-cm6 .cm-line.HyperMD-codeblock {
+  background: var(--th-code-bg);
+  font-family:
+    "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, monospace;
+}
+.markdown-source-view.mod-cm6 .cm-inline-code {
+  color: var(--th-link);
+  background: var(--th-h200);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+.theme-dark .markdown-source-view.mod-cm6 .cm-inline-code {
+  background: var(--th-h100);
+}
+
+/* ── 14. 본문 폭 (기본 700px → 920px, 양쪽 여백 약 50% 축소) ───── */
+body {
+  --file-line-width: 920px;
+}
