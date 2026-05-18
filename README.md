@@ -19,6 +19,33 @@ claude-harness/
 └── README.md             # 이 파일
 ```
 
+## 에이전트 / 스킬
+
+> 아래 표는 `.claude/hooks/post-readme-sync.sh` 에 의해 자동 갱신됩니다. 직접 편집하지 마세요.
+
+<!-- AUTO-GENERATED:AGENTS-SKILLS:START -->
+
+### 에이전트
+
+| 이름 | 설명 |
+|---|---|
+| `ai-api` | dinai-ai-api FastAPI + LangChain 1.x + Pydantic v2 전담 — AI/LLM, 채팅, RAG, 벡터검색 |
+| `code-status` | 루트 기준 4개 주요 레포지토리(/dinai-ai-api, /dinai-core-api, /dinai-client, /dinai-db)의 코드 현황을 분석합니다. |
+| `core-api` | dinai-core-api Spring Boot 3.4 + Java 21 + dinai-db 전담 — 핵심 비즈니스 API, DDD, DB 스키마 |
+| `devops` | 전 프로젝트 인프라/배포 전담 — Docker, Jenkins, Nginx, docker-compose, CI/CD 파이프라인 |
+| `frontend` | dinai-client React 19 + TypeScript + Vite 프론트엔드 전담 — UI/UX, 페이지, 컴포넌트, 상태관리 |
+| `security` | 전체 코드베이스 보안 감사 전담 — 읽기 전용, OWASP/STRIDE 기반 취약점 분석 및 보고 |
+
+### 스킬
+
+| 이름 | 설명 |
+|---|---|
+| `agent-team-setup` | Claude Code 에이전트 팀 초기 세팅 파일 일체를 프로젝트에 맞게 생성합니다. 사용자의 프로젝트를 인터뷰해 CLAUDE.md, .claude/settings.json, 에이전트 역할 정의 파일(.claude/agents/*.md) 을 자동 생성하고 즉시 사용 가능한 형태로 패키징합니다. "에이전트 팀 세팅", "agent team 설정", "CLAUDE.md 만들어줘", "멀티 에이전트 설정", "팀원 에이전트 구성", "Claude Code 팀 세팅", "에이전트 팀 초기화" 같은 요청에 항상 이 스킬을 사용하세요. 프로젝트 구조, 기술 스택, 팀 규모를 미리 알 필요 없이 인터뷰를 통해 수집합니다. |
+| `check-ownership` | 변경된 파일의 소유자를 판별하여 소유권 경계 위반 여부를 보고. 에이전트 팀 작업 전후로 사용. |
+| `security-audit` | 전체 코드베이스 보안 감사. OWASP Top 10 기반 취약점 스캔. 코드 변경 후 보안 검토가 필요할 때 사용. |
+| `test-all` | 전 프로젝트 검증 실행 (type-check, lint, test, build). 코드 변경 후 전체 상태를 한번에 확인할 때 사용. |
+<!-- AUTO-GENERATED:AGENTS-SKILLS:END -->
+
 ## 새 프로젝트에 적용
 
 대상 프로젝트 폴더를 정한 뒤 (예: `D:\hiaas\dinai`) PowerShell에서:
