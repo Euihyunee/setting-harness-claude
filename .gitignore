@@ -4,6 +4,12 @@
 .claude/.cache/
 .claude/projects/
 
+# Obsidian — vault 설정 (setting-pc 로 link 됨, 단일 소스)
+/.obsidian/
+/.obsidian-backup-*/
+/docs/.obsidian/
+/docs/.obsidian-backup-*/
+
 # Obsidian — 작업 상태/사용자별
 docs/.obsidian/workspace
 docs/.obsidian/workspace.json
